@@ -103,13 +103,13 @@ function TaskFormDialog({ task }: TaskFormDialogProps) {
             type="button"
             variant="ghost"
             size="icon"
-            aria-label={`Edit ${task?.title}`}
+            aria-label={task ? `Edit ${task.title}` : 'Edit task'}
           >
-            <Pencil />
+            <Pencil aria-hidden="true" />
           </Button>
         ) : (
           <Button type="button" size="lg" className="w-full sm:w-auto">
-            <Plus />
+            <Plus aria-hidden="true" />
             Add task
           </Button>
         )}
@@ -127,6 +127,7 @@ function TaskFormDialog({ task }: TaskFormDialogProps) {
         <Form {...form}>
           <form
             className="grid gap-5"
+            noValidate
             onSubmit={form.handleSubmit(onSubmit)}
           >
             <FormField

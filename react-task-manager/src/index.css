@@ -6,7 +6,7 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+  font-family: 'Geist Variable', ui-sans-serif, system-ui, sans-serif;
   color: #111827;
   background: #f8fafc;
   font-synthesis: none;
@@ -51,6 +51,16 @@ body {
   min-width: 320px;
   min-height: 100vh;
   margin: 0;
+  overflow-x: hidden;
+}
+
+::selection {
+  color: var(--primary-foreground);
+  background: var(--primary);
+}
+
+button:not(:disabled) {
+  cursor: pointer;
 }
 
 @theme inline {

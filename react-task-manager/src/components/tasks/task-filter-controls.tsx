@@ -32,8 +32,11 @@ function TaskFilterControls({
   }
 
   return (
-    <div className="grid gap-4 rounded-xl border bg-card p-4 shadow-xs sm:grid-cols-[1fr_auto] sm:items-end">
-      <div className="flex flex-wrap items-center gap-2">
+    <div className="grid gap-4 rounded-xl border bg-card p-4 sm:grid-cols-[1fr_auto] sm:items-end">
+      <div
+        aria-live="polite"
+        className="flex flex-wrap items-center gap-2"
+      >
         <Badge variant="outline">
           {totalCount} {totalCount === 1 ? 'total task' : 'total tasks'}
         </Badge>

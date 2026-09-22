@@ -17,10 +17,10 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Checkbox } from '@/components/ui/checkbox'
 import { useAppDispatch } from '@/redux/hooks'
+import { cn } from '@/lib/utils'
 import { deleteTask, toggleTask } from '@/redux/tasksSlice'
 import { type Priority, type Task } from '@/types/task'
 import { TaskFormDialog } from './task-form-dialog'
-import { cn } from '@/lib/utils'
 
 const priorityVariants: Record<
   Priority,
@@ -91,7 +91,7 @@ function TaskItem({ task }: TaskItemProps) {
                 size="icon"
                 aria-label={`Delete ${task.title}`}
               >
-                <Trash2 />
+                <Trash2 aria-hidden="true" />
               </Button>
             </AlertDialogTrigger>
             <AlertDialogContent>

@@ -41,14 +41,9 @@ function App() {
             <div className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-primary text-primary-foreground shadow-sm">
               <ListTodo className="size-5" aria-hidden="true" />
             </div>
-            <div>
-              <p className="text-muted-foreground text-xs font-medium tracking-[0.18em] uppercase">
-                Fekra workspace
-              </p>
-              <h1 className="font-heading text-xl font-semibold tracking-tight sm:text-2xl">
-                Task Manager
-              </h1>
-            </div>
+            <h1 className="font-heading text-xl font-semibold tracking-tight sm:text-2xl">
+              Task Manager
+            </h1>
           </div>
           <TaskFormDialog />
         </header>
@@ -115,7 +110,9 @@ function App() {
 
         <footer className="text-muted-foreground flex items-center justify-between border-t pt-5 text-xs">
           <span>Simple planning, steady progress.</span>
-          <span>{taskCount} saved</span>
+          <span>
+            {taskCount} {taskCount === 1 ? 'task' : 'tasks'} saved
+          </span>
         </footer>
       </div>
     </main>
