@@ -1,9 +1,10 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Plus } from 'lucide-react'
+import { Pencil, Plus } from 'lucide-react'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
+import { Button } from '@/components/ui/button'
 import {
   Dialog,
   DialogContent,
@@ -30,10 +31,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { Button } from '@/components/ui/button'
 import { useAppDispatch } from '@/redux/hooks'
-import { addTask } from '@/redux/tasksSlice'
-import { PRIORITY_VALUES, type Priority } from '@/types/task'
+import { addTask, updateTask } from '@/redux/tasksSlice'
+import {
+  PRIORITY_VALUES,
+  type Priority,
+  type Task,
+} from '@/types/task'
 
 const taskFormSchema = z.object({
   title: z
@@ -51,46 +55,72 @@ const defaultValues: TaskFormValues = {
   priority: 'Medium',
 }
 
-function TaskFormDialog() {
+function getTaskValues(task?: Task): TaskFormValues {
+  return task
+    ? {
+        title: task.title,
+        priority: task.priority,
+      }
+    : defaultValues
+}
+
+type TaskFormDialogProps = {
+  task?: Task
+}
+
+function TaskFormDialog({ task }: TaskFormDialogProps) {
   const [open, setOpen] = useState(false)
   const dispatch = useAppDispatch()
+  const isEditing = Boolean(task)
   const form = useForm<TaskFormValues>({
-    defaultValues,
+    defaultValues: getTaskValues(task),
     resolver: zodResolver(taskFormSchema),
   })
 
   function handleOpenChange(nextOpen: boolean) {
     setOpen(nextOpen)
-
-    if (!nextOpen) {
-      form.reset(defaultValues)
-    }
+    form.reset(nextOpen ? getTaskValues(task) : getTaskValues())
   }
 
   function onSubmit(values: TaskFormValues) {
-    dispatch(
-      addTask({
-        title: values.title.trim(),
-        priority: values.priority as Priority,
-      }),
-    )
-    form.reset(defaultValues)
-    setOpen(false)
+    const title = values.title.trim()
+    const priority = values.priority as Priority
+
+    if (task) {
+      dispatch(updateTask({ id: task.id, title, priority }))
+    } else {
+      dispatch(addTask({ title, priority }))
+    }
+
+    handleOpenChange(false)
   }
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
-        <Button type="button" size="lg" className="w-full sm:w-auto">
-          <Plus />
-          Add task
-        </Button>
+        {isEditing ? (
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon"
+            aria-label={`Edit ${task?.title}`}
+          >
+            <Pencil />
+          </Button>
+        ) : (
+          <Button type="button" size="lg" className="w-full sm:w-auto">
+            <Plus />
+            Add task
+          </Button>
+        )}
       </DialogTrigger>
       <DialogContent className="sm:max-w-lg">
         <DialogHeader>
-          <DialogTitle>Create a task</DialogTitle>
+          <DialogTitle>{isEditing ? 'Edit task' : 'Create a task'}</DialogTitle>
           <DialogDescription>
-            Add a clear next step and give it a priority so it is easy to find.
+            {isEditing
+              ? 'Update the task details while keeping its completion state.'
+              : 'Add a clear next step and give it a priority so it is easy to find.'}
           </DialogDescription>
         </DialogHeader>
 
@@ -156,7 +186,9 @@ function TaskFormDialog() {
               >
                 Cancel
               </Button>
-              <Button type="submit">Create task</Button>
+              <Button type="submit">
+                {isEditing ? 'Save changes' : 'Create task'}
+              </Button>
             </DialogFooter>
           </form>
         </Form>

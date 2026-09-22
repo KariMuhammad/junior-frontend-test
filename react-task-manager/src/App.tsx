@@ -1,4 +1,4 @@
-import { CheckCircle2, Inbox, ListTodo } from 'lucide-react'
+import { Inbox, ListTodo } from 'lucide-react'
 
 import {
   Card,
@@ -8,6 +8,7 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { TaskFormDialog } from '@/components/tasks/task-form-dialog'
+import { TaskList } from '@/components/tasks/task-list'
 import { useAppSelector } from '@/redux/hooks'
 import { selectTaskCount } from '@/redux/selectors'
 
@@ -48,38 +49,35 @@ function App() {
               </h2>
               <p className="text-muted-foreground mt-4 max-w-xl text-base leading-7 sm:text-lg">
                 {hasTasks
-                  ? `${taskCount} ${taskCount === 1 ? 'task is' : 'tasks are'} saved. Your task list and actions will appear here next.`
+                  ? `${taskCount} ${taskCount === 1 ? 'task is' : 'tasks are'} saved. Use the controls on each card to keep them moving.`
                   : 'Capture the work that matters, set its priority, and move through your day with a clear view of what comes next.'}
               </p>
             </div>
 
-            <Card className="overflow-hidden border-dashed shadow-none">
-              <CardHeader className="sr-only">
-                <CardTitle>{hasTasks ? 'Tasks saved' : 'No tasks yet'}</CardTitle>
-                <CardDescription>
-                  {hasTasks
-                    ? 'Your saved tasks will be displayed here.'
-                    : 'Create your first task to get started.'}
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="flex min-h-64 flex-col items-center justify-center px-6 py-12 text-center sm:min-h-72">
-                <div className="mb-5 flex size-14 items-center justify-center rounded-2xl bg-muted text-muted-foreground">
-                  {hasTasks ? (
-                    <CheckCircle2 className="size-7" aria-hidden="true" />
-                  ) : (
+            {hasTasks ? (
+              <TaskList />
+            ) : (
+              <Card className="overflow-hidden border-dashed shadow-none">
+                <CardHeader className="sr-only">
+                  <CardTitle>Your task list is empty</CardTitle>
+                  <CardDescription>
+                    Create your first task to get started.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="flex min-h-64 flex-col items-center justify-center px-6 py-12 text-center sm:min-h-72">
+                  <div className="mb-5 flex size-14 items-center justify-center rounded-2xl bg-muted text-muted-foreground">
                     <Inbox className="size-7" aria-hidden="true" />
-                  )}
-                </div>
-                <h3 className="text-lg font-semibold">
-                  {hasTasks ? 'Task saved successfully' : 'Your task list is empty'}
-                </h3>
-                <p className="text-muted-foreground mt-2 max-w-md text-sm leading-6">
-                  {hasTasks
-                    ? 'Nice work. Keep adding tasks and the full workspace will grow with you.'
-                    : 'Start with one small, concrete action. You can always adjust the priority later.'}
-                </p>
-              </CardContent>
-            </Card>
+                  </div>
+                  <h3 className="text-lg font-semibold">
+                    Your task list is empty
+                  </h3>
+                  <p className="text-muted-foreground mt-2 max-w-md text-sm leading-6">
+                    Start with one small, concrete action. You can always
+                    adjust the priority later.
+                  </p>
+                </CardContent>
+              </Card>
+            )}
           </div>
         </section>
 
