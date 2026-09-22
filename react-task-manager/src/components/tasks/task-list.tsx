@@ -1,11 +1,12 @@
 import { CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { useAppSelector } from '@/redux/hooks'
-import { selectTasks } from '@/redux/selectors'
+import type { Task } from '@/types/task'
 import { TaskItem } from './task-item'
 
-function TaskList() {
-  const tasks = useAppSelector(selectTasks)
+type TaskListProps = {
+  tasks: Task[]
+}
 
+function TaskList({ tasks }: TaskListProps) {
   return (
     <section aria-labelledby="task-list-heading" className="grid gap-4">
       <CardHeader className="px-0">

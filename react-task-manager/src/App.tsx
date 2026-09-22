@@ -1,4 +1,5 @@
 import { Inbox, ListTodo } from 'lucide-react'
+import { useMemo, useState } from 'react'
 
 import {
   Card,
@@ -8,13 +9,29 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { TaskFormDialog } from '@/components/tasks/task-form-dialog'
+import { FilteredEmptyState } from '@/components/tasks/filtered-empty-state'
+import { TaskFilterControls } from '@/components/tasks/task-filter-controls'
+import { filterTasksByPriority } from '@/components/tasks/task-filtering'
 import { TaskList } from '@/components/tasks/task-list'
 import { useAppSelector } from '@/redux/hooks'
-import { selectTaskCount } from '@/redux/selectors'
+import {
+  selectCompletedTaskCount,
+  selectTasks,
+  selectTaskCount,
+} from '@/redux/selectors'
+import { type PriorityFilter } from '@/types/task'
 
 function App() {
+  const [priorityFilter, setPriorityFilter] = useState<PriorityFilter>('All')
+  const tasks = useAppSelector(selectTasks)
   const taskCount = useAppSelector(selectTaskCount)
+  const completedTaskCount = useAppSelector(selectCompletedTaskCount)
+  const visibleTasks = useMemo(
+    () => filterTasksByPriority(tasks, priorityFilter),
+    [priorityFilter, tasks],
+  )
   const hasTasks = taskCount > 0
+  const hasVisibleTasks = visibleTasks.length > 0
 
   return (
     <main className="min-h-screen bg-background text-foreground">
@@ -55,7 +72,22 @@ function App() {
             </div>
 
             {hasTasks ? (
-              <TaskList />
+              <div className="grid gap-5">
+                <TaskFilterControls
+                  completedCount={completedTaskCount}
+                  filter={priorityFilter}
+                  onFilterChange={setPriorityFilter}
+                  totalCount={taskCount}
+                />
+                {hasVisibleTasks ? (
+                  <TaskList tasks={visibleTasks} />
+                ) : priorityFilter === 'All' ? null : (
+                  <FilteredEmptyState
+                    priority={priorityFilter}
+                    onReset={() => setPriorityFilter('All')}
+                  />
+                )}
+              </div>
             ) : (
               <Card className="overflow-hidden border-dashed shadow-none">
                 <CardHeader className="sr-only">
